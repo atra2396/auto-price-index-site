@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="row mh-75" id="test-div">
+    <script>
+        let ctx;
+        let myChart;
+    </script>
+    {% if year and make and model and buckets and values %}
+        {{ render_partial('prices.html', year=year, make=make, model=model, buckets=buckets, values=values) }}
+    {% else %}
+    <div style="height: 45vh">
+        &nbsp;
+    </div>
+    {% endif %}
+</div>
+<form class="row mt-3">
+    <div class="col">
+        <select name="year" class="form-select" id="year-select" hx-get="/makes" hx-target="#make-select" hx-swap="outerHTML" aria-label="Year selector">
+            <option selected>Select Year</option>
+            {% for year in years %}
+            <option value="{{year}}">{{year}}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col">
+        <select class="form-select" id="make-select" aria-label="Make selector" disabled>
+            <option selected>Select Make</option>
+        </select>
+    </div>
+    <div class="col">
+        <select class="form-select" id="model-select" aria-label="Model selector" disabled>
+            <option selected>Select Model</option>
+        </select>
+    </div>
+    <div class="col-1">
+        <button type="submit" class="btn btn-primary" hx-get="/" hx-push-url="true" hx-include=".form-select" hx-target="#test-div">Search</button>
+    </div>
+</form>
+{% endblock %}
