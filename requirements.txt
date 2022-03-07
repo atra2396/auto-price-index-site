@@ -16,6 +16,8 @@ MarkupSafe==2.0.1
 msrest==0.6.21
 numpy==1.22.2
 oauthlib==3.2.0
+pip-autoremove==0.10.0
+pony==0.7.16
 pydantic==1.9.0
 python-dotenv==0.19.2
 PyYAML==6.0

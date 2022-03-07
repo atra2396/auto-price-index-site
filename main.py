@@ -1,33 +1,20 @@
 import datetime
-import random
-from re import template
+import json
 from typing import Optional
 
 import jinja_partials
 from fastapi import FastAPI, Request
-from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 from stats import get_price_distribution, MockAutoDataRepository
+from storage import AzureAutoDataRepository
 
 app = FastAPI()
-app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 jinja_partials.register_starlette_extensions(templates)
 
-
-YMM = {
-    2000: {
-        "Make": ["Mod1", "Mod2"],
-        "OtherMake": ["Mod3", "Mod4"]
-    },
-
-    2001: {
-        "Make": ["Mod10", "Mod20"],
-        "OtherMake": ["Mod30", "Mod40", "Mod50"],
-        "FinalMake": ["Mod60"]
-    }
-}
+with open("vehicles.json", "r") as f:
+    YMM = json.load(f)
 
 
 @app.get("/")
@@ -72,26 +59,26 @@ def get_years():
 
 @app.get("/api/years/{year}/makes")
 def get_makes(year: int):
-    return list(YMM[year].keys())
+    return list(YMM[str(year)].keys())
 
 
 @app.get("/api/years/{year}/makes/{make}/models")
 def get_models(year: int, make: str):
-    return YMM[year][make]
+    return YMM[str(year)][make]
 
 # ------
 
 
 @app.get("/makes")
-async def makes_partial(request: Request, year: int = 2000):
-    return templates.TemplateResponse("make-select.html", {"request": request, "makes": list(YMM[year].keys()), "year": year})
+def makes_partial(request: Request, year: int = 2000):
+    return templates.TemplateResponse("make-select.html", {"request": request, "makes": list(YMM[str(year)].keys()), "year": year})
 
 
 @app.get("/models")
-async def models_partial(request: Request, year: int = 2000, make: str = ""):
-    return templates.TemplateResponse("model-select.html", {"request": request, "models": list(YMM[year][make])})
+def models_partial(request: Request, year: int = 2000, make: str = ""):
+    return templates.TemplateResponse("model-select.html", {"request": request, "models": list(YMM[str(year)][make])})
 
 
 def get_chart_data(year, make, model):
-    prices = get_price_distribution(MockAutoDataRepository(), year, make, model, datetime.datetime.now())
+    prices = get_price_distribution(AzureAutoDataRepository(), year, make, model, datetime.datetime.now())
     return prices.get_bucket_labels(), prices.bucket_values
