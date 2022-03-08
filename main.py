@@ -51,21 +51,6 @@ def home(request: Request, year: Optional[int] = None, make: Optional[str] = Non
         }
     )
 
-
-@app.get("/api/years")
-def get_years():
-    return list(YMM.keys())
-
-
-@app.get("/api/years/{year}/makes")
-def get_makes(year: int):
-    return list(YMM[str(year)].keys())
-
-
-@app.get("/api/years/{year}/makes/{make}/models")
-def get_models(year: int, make: str):
-    return YMM[str(year)][make]
-
 # ------
 
 
