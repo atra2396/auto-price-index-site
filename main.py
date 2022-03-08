@@ -1,5 +1,6 @@
 import datetime
 import json
+import os
 from typing import Optional
 
 import jinja_partials
@@ -65,5 +66,12 @@ def models_partial(request: Request, year: int = 2000, make: str = ""):
 
 
 def get_chart_data(year, make, model):
-    prices = get_price_distribution(AzureAutoDataRepository(), year, make, model, datetime.datetime.now())
+
+    if os.environ.get("STORAGE_CONNECTION_STRING"):
+        repo = AzureAutoDataRepository()
+    else:
+        print("WARNING: No storage connection string detected. Serving mock data.")
+        repo = MockAutoDataRepository()
+
+    prices = get_price_distribution(repo, year, make, model, datetime.datetime.now())
     return prices.get_bucket_labels(), prices.bucket_values
