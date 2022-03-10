@@ -22,25 +22,25 @@ class AutoDataPoint(BaseModel):
     price: int
 
 class AutoDataRepository:
-    def fetch_data(self, year: int, make: str, model: str, date: datetime) -> List[AutoDataPoint]:
+    def fetch_data(self, start_year: int, end_year: int, make: str, model: str, date: datetime) -> List[AutoDataPoint]:
         raise NotImplementedError()
 
 class MockAutoDataRepository(AutoDataRepository):
-    def fetch_data(self, year: int, make: str, model: str, date: datetime) -> List[AutoDataPoint]:
+    def fetch_data(self, start_year: int, end_year: int, make: str, model: str, date: datetime) -> List[AutoDataPoint]:
         number_of_values = random.randint(5, 40)
         mean = random.randint(5000, 10000)
         dev = random.randint(1000, 3000)
         prices = np.random.normal(mean, dev, number_of_values)
         return [AutoDataPoint(price=int(p)) for p in prices]
 
-def get_price_distribution(data_repo: AutoDataRepository, year: int, make: str, model: str, date: datetime) -> PriceInfo:
+def get_price_distribution(data_repo: AutoDataRepository, start_year: int, end_year: int, make: str, model: str, date: datetime) -> PriceInfo:
     NUMBER_OF_BUCKETS = 7
 
     # fetch all vehicles w/ Y/M/M
     # query only 6mo/1yr back
     # exclude any results where the price is < $100
     # bucket the values within the range
-    data = data_repo.fetch_data(year, make, model, date)
+    data = data_repo.fetch_data(start_year, end_year, make, model, date)
     filtered_prices = [d.price for d in data if d.price > 100]
     raw_buckets = np.linspace(min(filtered_prices), max(filtered_prices), NUMBER_OF_BUCKETS)
     buckets = [int(b) for b in raw_buckets]

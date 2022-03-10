@@ -17,12 +17,12 @@ class AzureAutoDataRepository(AutoDataRepository):
 
     LOCATIONS = ["lex", "louisville", "cincinnati", "indianapolis"]
 
-    def fetch_data(self, year: int, make: str, model: str, date: datetime) -> List[AutoDataPoint]:
+    def fetch_data(self, start_year: int, end_year: int, make: str, model: str, date: datetime) -> List[AutoDataPoint]:
         table = get_table()
         partition_queries = [f"PartitionKey eq '{loc}'" for loc in self.LOCATIONS]
         partition_query = " or ".join(partition_queries)
         
-        query = f"({partition_query}) and year eq {year} and make eq '{make}' and model eq '{model}'"
+        query = f"({partition_query}) and year ge {start_year} and year le {end_year} and make eq '{make}' and model eq '{model}'"
         result = table.query_entities(query)
 
         prices = [AutoDataPoint(price=r["price"]) for r in result]

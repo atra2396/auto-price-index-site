@@ -19,10 +19,10 @@ with open("vehicles.json", "r") as f:
 
 
 @app.get("/")
-def home(request: Request, year: Optional[int] = None, make: Optional[str] = None, model: Optional[str] = None):
+def home(request: Request, start_year: Optional[int] = None, end_year: Optional[int] = None, make: Optional[str] = None, model: Optional[str] = None):
 
-    if year and make and model:
-        buckets, bucket_vals = get_chart_data(year, make, model)
+    if start_year and end_year and make and model:
+        buckets, bucket_vals = get_chart_data(start_year, end_year, make, model)
     else:
         buckets = bucket_vals = None
 
@@ -33,7 +33,8 @@ def home(request: Request, year: Optional[int] = None, make: Optional[str] = Non
                 "request": request,
                 "buckets": buckets,
                 "values": bucket_vals,
-                "year": year,
+                "start_year": start_year,
+                "end_year": end_year,
                 "make": make,
                 "model": model
             }
@@ -44,7 +45,8 @@ def home(request: Request, year: Optional[int] = None, make: Optional[str] = Non
         {
             "request": request,
             "years": list(YMM.keys()),
-            "year": year,
+            "start_year": start_year,
+            "end_year": end_year,
             "make": make,
             "model": model,
             "buckets": buckets,
@@ -54,18 +56,32 @@ def home(request: Request, year: Optional[int] = None, make: Optional[str] = Non
 
 # ------
 
+@app.get("/end_years")
+def end_years_partial(request: Request, start_year: int):
+    return templates.TemplateResponse("end-year-select.html", {"request": request, "years": [int(y) for y in YMM.keys() if int(y) >= start_year]})
 
 @app.get("/makes")
-def makes_partial(request: Request, year: int = 2000):
-    return templates.TemplateResponse("make-select.html", {"request": request, "makes": list(YMM[str(year)].keys()), "year": year})
+def makes_partial(request: Request, start_year: int, end_year: int):
+    years = range(start_year, end_year+1)
+    makes = [YMM.get(str(year)).keys() for year in years if YMM.get(str(year))]
+    all_makes = []
+    for make_list in makes:
+        all_makes.extend(make_list)
+    return templates.TemplateResponse("make-select.html", {"request": request, "makes": set(all_makes), "start_year": start_year, "end_year": end_year})
 
 
 @app.get("/models")
-def models_partial(request: Request, year: int = 2000, make: str = ""):
-    return templates.TemplateResponse("model-select.html", {"request": request, "models": list(YMM[str(year)][make])})
+def models_partial(request: Request, start_year: int, end_year:int, make: str):
+    years = range(start_year, end_year+1)
+    models = [YMM[str(year)][make] for year in years if YMM.get(str(year), {}).get(make)]
+    all_models = []
+    for model_list in models:
+        all_models.extend(model_list)
+
+    return templates.TemplateResponse("model-select.html", {"request": request, "models": set(all_models)})
 
 
-def get_chart_data(year, make, model):
+def get_chart_data(start_year, end_year, make, model):
 
     if os.environ.get("STORAGE_CONNECTION_STRING"):
         repo = AzureAutoDataRepository()
@@ -73,5 +89,5 @@ def get_chart_data(year, make, model):
         print("WARNING: No storage connection string detected. Serving mock data.")
         repo = MockAutoDataRepository()
 
-    prices = get_price_distribution(repo, year, make, model, datetime.datetime.now())
+    prices = get_price_distribution(repo, start_year, end_year, make, model, datetime.datetime.now())
     return prices.get_bucket_labels(), prices.bucket_values
