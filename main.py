@@ -67,7 +67,7 @@ def makes_partial(request: Request, start_year: int, end_year: int):
     all_makes = []
     for make_list in makes:
         all_makes.extend(make_list)
-    return templates.TemplateResponse("make-select.html", {"request": request, "makes": set(all_makes), "start_year": start_year, "end_year": end_year})
+    return templates.TemplateResponse("make-select.html", {"request": request, "makes": sorted(set(all_makes)), "start_year": start_year, "end_year": end_year})
 
 
 @app.get("/models")
@@ -78,7 +78,7 @@ def models_partial(request: Request, start_year: int, end_year:int, make: str):
     for model_list in models:
         all_models.extend(model_list)
 
-    return templates.TemplateResponse("model-select.html", {"request": request, "models": set(all_models)})
+    return templates.TemplateResponse("model-select.html", {"request": request, "models": sorted(set(all_models))})
 
 
 def get_chart_data(start_year, end_year, make, model):
