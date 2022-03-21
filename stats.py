@@ -33,15 +33,26 @@ class MockAutoDataRepository(AutoDataRepository):
         prices = np.random.normal(mean, dev, number_of_values)
         return [AutoDataPoint(price=int(p)) for p in prices]
 
+def get_outlier_thresholds(data_list):
+    sorted_data = sorted(data_list)
+    q1, q3 = np.percentile(sorted_data, [25, 75])
+    iqr = q3 - q1
+    lower_bound = q1 - (3 * iqr) 
+    upper_bound = q3 + (3  * iqr) 
+
+    return lower_bound, upper_bound
+
 def get_price_distribution(data_repo: AutoDataRepository, start_year: int, end_year: int, make: str, model: str, date: datetime) -> PriceInfo:
-    NUMBER_OF_BUCKETS = 7
+    NUMBER_OF_BUCKETS = 12
 
     # fetch all vehicles w/ Y/M/M
     # query only 6mo/1yr back
     # exclude any results where the price is < $100
     # bucket the values within the range
     data = data_repo.fetch_data(start_year, end_year, make, model, date)
-    filtered_prices = [d.price for d in data if d.price > 100]
+    prices_without_zeros = [d.price for d in data if d.price > 100]
+    lower_bound, upper_bound = get_outlier_thresholds(prices_without_zeros)
+    filtered_prices = [dp for dp in prices_without_zeros if dp >= lower_bound and dp <= upper_bound]
     raw_buckets = np.linspace(min(filtered_prices), max(filtered_prices), NUMBER_OF_BUCKETS)
     buckets = [int(b) for b in raw_buckets]
     bucket_values = [0] * NUMBER_OF_BUCKETS

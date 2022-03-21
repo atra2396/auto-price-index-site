@@ -15,7 +15,7 @@ def get_table():
 
 class AzureAutoDataRepository(AutoDataRepository):
 
-    LOCATIONS = ["lex", "louisville", "cincinnati", "indianapolis"]
+    LOCATIONS = ["lex", "louisville", "cincinnati", "indianapolis", "atlanta", "stlouis", "chicago", "charlotte"]
 
     def fetch_data(self, start_year: int, end_year: int, make: str, model: str, date: datetime) -> List[AutoDataPoint]:
         table = get_table()

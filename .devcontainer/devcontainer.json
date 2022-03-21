@@ -31,6 +31,10 @@
 		"python.linting.pylintPath": "/usr/local/py-utils/bin/pylint"
 	},
 
+	"containerEnv": {
+		"DEV_MODE": "1"
+	},
+
 	// Add the IDs of extensions you want installed when the container is created.
 	"extensions": [
 		"ms-python.python",

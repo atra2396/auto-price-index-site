@@ -17,6 +17,11 @@ jinja_partials.register_starlette_extensions(templates)
 with open("vehicles.json", "r") as f:
     YMM = json.load(f)
 
+if "DEV_MODE" in os.environ:
+    with open("local.settings.json", "r") as s:
+        settings = json.load(s)
+    for key in settings.keys():
+        os.environ[key] = settings[key]
 
 @app.get("/")
 def home(request: Request, start_year: Optional[int] = None, end_year: Optional[int] = None, make: Optional[str] = None, model: Optional[str] = None):

@@ -5,11 +5,11 @@
         let ctx;
         let myChart;
     </script>
-    {% if year and make and model and buckets and values %}
-        {{ render_partial('prices.html', year=year, make=make, model=model, buckets=buckets, values=values) }}
+    {% if start_year and end_year and make and model and buckets and values %}
+        {{ render_partial('prices.html', start_year=start_year, end_year=end_year, make=make, model=model, buckets=buckets, values=values) }}
     {% else %}
-    <div style="height: 45vh">
-        &nbsp;
+    <div class="col text-center" style="height: 30vh;">
+        <h1 style="margin-top: 15vh; font-size: 5em;">Test Header</h1>
     </div>
     {% endif %}
 </div>
