@@ -1,3 +1,4 @@
+<h3>{{start_year}}-{{end_year}} {{make}} {{model}} Prices</h3>
 <canvas class="mh-75 mt-3" id="myChart" style="max-height: 50vh;"></canvas>
 <script>
 ctx = document.getElementById('myChart').getContext('2d');
@@ -33,6 +34,6 @@ myChart = new Chart(ctx, {
                 beginAtZero: true
             }
         }
-    }
+    },
 });
 </script>
