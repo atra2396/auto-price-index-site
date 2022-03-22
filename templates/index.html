@@ -8,8 +8,8 @@
     {% if start_year and end_year and make and model and buckets and values %}
         {{ render_partial('prices.html', start_year=start_year, end_year=end_year, make=make, model=model, buckets=buckets, values=values) }}
     {% else %}
-    <div class="col text-center" style="height: 30vh;">
-        <h1 style="margin-top: 15vh; font-size: 5em;">Test Header</h1>
+    <div class="col text-center text-wrap" style="height: 30vh; margin-top: 15vh;">
+        <h1 style="font-size: 5em;">Classified Car Prices</h1>
     </div>
     {% endif %}
 </div>
@@ -42,4 +42,17 @@
         <button type="submit" class="btn btn-primary" hx-get="/" hx-push-url="true" hx-include=".form-select" hx-target="#test-div">Search</button>
     </div>
 </form>
+<div class="row justify-content-center" style="margin-top: 10vh;">
+    <h2>What is this?</h2>
+    <p>
+        Classified Car Prices is a site which collects car price information from classified listings across the internet in a variety of regions. 
+        Prices are divided into 12 buckets, with $0 listings and extreme outliers removed (sorry $67,000 1999 Civic, you ain't ruining my data). 
+        New data is added every day.
+    </p>
+    <h2 class="mt-5">Why does this exist?</h2>
+    <p>
+        I enjoy browsing used car listings on sites like Craigslist and Facebook Marketplace, but find it hard to keep track of what prices are 
+        reasonable for certain vehicles. So, I created this site to catalog prices trends in order to make more informed purchase decisions.
+    </p>
+</div>
 {% endblock %}
