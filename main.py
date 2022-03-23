@@ -5,6 +5,7 @@ from typing import Optional
 
 import jinja_partials
 from fastapi import FastAPI, Request
+from fastapi.responses import FileResponse
 from fastapi.templating import Jinja2Templates
 
 from stats import get_price_distribution, MockAutoDataRepository
@@ -22,6 +23,10 @@ if "DEV_MODE" in os.environ:
         settings = json.load(s)
     for key in settings.keys():
         os.environ[key] = settings[key]
+
+@app.get("/favicon.ico", include_in_schema=False)
+async def favicon():
+    return FileResponse("favicon.ico")
 
 @app.get("/")
 def home(request: Request, start_year: Optional[int] = None, end_year: Optional[int] = None, make: Optional[str] = None, model: Optional[str] = None):
