@@ -22,22 +22,26 @@
             {% endfor %}
         </select>
     </div>
+    <div class="w-100 d-lg-none"></div>
     <div class="col">
         <select name="end_year" class="form-select" id="end-year-select" disabled>
             <option selected>Select End Year</option>
 
         </select>
     </div>
+    <div class="w-100 d-lg-none"></div>
     <div class="col">
         <select class="form-select" id="make-select" aria-label="Make selector" disabled>
             <option selected>Select Make</option>
         </select>
     </div>
+    <div class="w-100 d-lg-none"></div>
     <div class="col">
         <select class="form-select" id="model-select" aria-label="Model selector" disabled>
             <option selected>Select Model</option>
         </select>
     </div>
+    <div class="w-100 d-lg-none"></div>
     <div class="col-1">
         <button type="submit" class="btn btn-primary" hx-get="/" hx-push-url="true" hx-include=".form-select" hx-target="#test-div">Search</button>
     </div>
