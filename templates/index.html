@@ -8,8 +8,8 @@
     {% if start_year and end_year and make and model and buckets and values %}
         {{ render_partial('prices.html', start_year=start_year, end_year=end_year, make=make, model=model, buckets=buckets, values=values) }}
     {% else %}
-    <div class="col text-center text-wrap" style="height: 30vh; margin-top: 15vh;">
-        <h1 style="font-size: 5em;">Classified Car Prices</h1>
+    <div class="col text-center text-wrap" style="min-height: 30vh; margin-top: 15vh;">
+        <h1 class="ccp-header">Classified Car Prices</h1>
     </div>
     {% endif %}
 </div>
