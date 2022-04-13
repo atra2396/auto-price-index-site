@@ -1,6 +1,0 @@
-<select name="end_year" class="form-select year-selector" id="end-year-select" hx-include="#start-year-select" hx-get="/makes" hx-target="#make-select" hx-swap="outerHTML" aria-label="Year selector">
-    <option selected>Select End Year</option>
-    {% for year in years %}
-    <option value="{{year}}">{{year}}</option>
-    {% endfor %}
-</select>

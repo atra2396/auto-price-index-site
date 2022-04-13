@@ -1,6 +1,0 @@
-<select name="make" class="form-select" id="make-select" hx-get="/models" hx-include=".year-selector" hx-target="#model-select" hx-swap="outerHTML" aria-label="make selector">
-    <option selected>Select Make</option>
-    {% for make in makes %}
-    <option value="{{make}}">{{make}}</option>
-    {% endfor %}
-</select>

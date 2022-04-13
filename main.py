@@ -7,6 +7,7 @@ import jinja_partials
 from fastapi import FastAPI, Request
 from fastapi.responses import FileResponse
 from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
 
 from stats import get_price_distribution, MockAutoDataRepository
 from storage import AzureAutoDataRepository
@@ -14,6 +15,7 @@ from storage import AzureAutoDataRepository
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
 jinja_partials.register_starlette_extensions(templates)
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 with open("vehicles.json", "r") as f:
     YMM = json.load(f)
@@ -29,7 +31,7 @@ async def favicon():
     return FileResponse("favicon.ico")
 
 @app.get("/")
-def home(request: Request, start_year: Optional[int] = None, end_year: Optional[int] = None, make: Optional[str] = None, model: Optional[str] = None):
+async def home(request: Request, start_year: Optional[int] = None, end_year: Optional[int] = None, make: Optional[str] = None, model: Optional[str] = None):
 
     if start_year and end_year and make and model:
         buckets, bucket_vals = get_chart_data(start_year, end_year, make, model)
@@ -64,31 +66,9 @@ def home(request: Request, start_year: Optional[int] = None, end_year: Optional[
         }
     )
 
-# ------
-
-@app.get("/end_years")
-def end_years_partial(request: Request, start_year: int):
-    return templates.TemplateResponse("end-year-select.html", {"request": request, "years": [int(y) for y in YMM.keys() if int(y) >= start_year]})
-
-@app.get("/makes")
-def makes_partial(request: Request, start_year: int, end_year: int):
-    years = range(start_year, end_year+1)
-    makes = [YMM.get(str(year)).keys() for year in years if YMM.get(str(year))]
-    all_makes = []
-    for make_list in makes:
-        all_makes.extend(make_list)
-    return templates.TemplateResponse("make-select.html", {"request": request, "makes": sorted(set(all_makes)), "start_year": start_year, "end_year": end_year})
-
-
-@app.get("/models")
-def models_partial(request: Request, start_year: int, end_year:int, make: str):
-    years = range(start_year, end_year+1)
-    models = [YMM[str(year)][make] for year in years if YMM.get(str(year), {}).get(make)]
-    all_models = []
-    for model_list in models:
-        all_models.extend(model_list)
-
-    return templates.TemplateResponse("model-select.html", {"request": request, "models": sorted(set(all_models))})
+@app.get("/api/vehicles")
+async def get_vehicle_data(request: Request):
+    return YMM
 
 
 def get_chart_data(start_year, end_year, make, model):

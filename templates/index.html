@@ -4,9 +4,11 @@
     <script>
         let ctx;
         let myChart;
+
     </script>
     {% if start_year and end_year and make and model and buckets and values %}
-        {{ render_partial('prices.html', start_year=start_year, end_year=end_year, make=make, model=model, buckets=buckets, values=values) }}
+    {{ render_partial('prices.html', start_year=start_year, end_year=end_year, make=make, model=model, buckets=buckets,
+    values=values) }}
     {% else %}
     <div class="col text-center text-wrap" style="min-height: 30vh; margin-top: 15vh;">
         <h1 class="ccp-header">Classified Car Prices</h1>
@@ -15,48 +17,51 @@
 </div>
 <form class="row mt-3">
     <div class="col">
-        <select name="start_year" class="form-select year-selector" id="start-year-select" hx-get="/end_years" hx-target="#end-year-select" hx-swap="outerHTML" aria-label="Year selector">
-            <option selected>Select Start Year</option>
-            {% for year in years %}
-            <option value="{{year}}">{{year}}</option>
-            {% endfor %}
+        <select name="start_year" class="form-select year-selector" id="start-year-select"
+            onchange="update_selector('end-year-select', get_end_years(), 'End Year')" aria-label="Year selector">
         </select>
     </div>
     <div class="w-100 d-lg-none"></div>
     <div class="col">
-        <select name="end_year" class="form-select" id="end-year-select" disabled>
+        <select name="end_year" class="form-select" id="end-year-select"
+            onchange="update_selector('make-select', get_makes_for_year(), 'Make')" disabled>
             <option selected>Select End Year</option>
-
+ 
         </select>
     </div>
     <div class="w-100 d-lg-none"></div>
     <div class="col">
-        <select class="form-select" id="make-select" aria-label="Make selector" disabled>
+        <select name="make" class="form-select" id="make-select"
+            onchange="update_selector('model-select', get_models_for_year_make(), 'Model')" aria-label="Make selector" disabled>
             <option selected>Select Make</option>
         </select>
     </div>
     <div class="w-100 d-lg-none"></div>
     <div class="col">
-        <select class="form-select" id="model-select" aria-label="Model selector" disabled>
+        <select name="model" class="form-select" id="model-select" aria-label="Model selector" disabled>
             <option selected>Select Model</option>
         </select>
     </div>
     <div class="w-100 d-lg-none"></div>
     <div class="col-1">
-        <button type="submit" class="btn btn-primary" hx-get="/" hx-push-url="true" hx-include=".form-select" hx-target="#test-div">Search</button>
+        <button type="submit" class="btn btn-primary" hx-get="/" hx-push-url="true" hx-include=".form-select"
+            hx-target="#test-div">Search</button>
     </div>
 </form>
 <div class="row justify-content-center" style="margin-top: 10vh;">
     <h2>What is this?</h2>
     <p>
-        Classified Car Prices is a site which collects car price information from classified listings across the internet in a variety of regions. 
-        Prices are divided into 12 buckets, with $0 listings and extreme outliers removed. 
+        Classified Car Prices is a site which collects car price information from classified listings across the
+        internet in a variety of regions.
+        Prices are divided into 12 buckets, with $0 listings and extreme outliers removed.
         New data is added every day.
     </p>
     <h2 class="mt-5">Why does this exist?</h2>
     <p>
-        I enjoy browsing used car listings on sites like Craigslist and Facebook Marketplace, but find it hard to keep track of what prices are 
-        reasonable for certain vehicles. So, I created this site to catalog prices trends in order to make more informed purchase decisions.
+        I enjoy browsing used car listings on sites like Craigslist and Facebook Marketplace, but find it hard to keep
+        track of what prices are
+        reasonable for certain vehicles. So, I created this site to catalog prices trends in order to make more informed
+        purchase decisions.
     </p>
 </div>
 {% endblock %}
