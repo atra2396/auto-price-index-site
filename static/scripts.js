@@ -4,9 +4,7 @@ fetch("/api/vehicles").then(
         resp.json().then(
             json => 
             {
-                console.log("Received vehicles")
                 vehicle_data = json;
-                console.log(get_start_years())
                 update_selector("start-year-select", get_start_years(), 'Start Year');
             }
         )
