@@ -1,7 +1,11 @@
 <h3>{{start_year}}-{{end_year}} {{make}} {{model}} Prices</h3>
-<canvas class="mh-75 mt-3" id="myChart" style="max-height: 50vh;"></canvas>
+<div class="price-graph">
+    <canvas id="myChart"></canvas>
+</div>
 <script>
 ctx = document.getElementById('myChart').getContext('2d');
+mediaQuery = window.matchMedia('(min-width: 768px)');
+chartAxis = mediaQuery.matches ? "x" : "y"
 myChart = new Chart(ctx, {
     type: 'bar',
     data: {
@@ -29,11 +33,14 @@ myChart = new Chart(ctx, {
         }]
     },
     options: {
+        indexAxis: chartAxis,
+        responsive: true,
+        maintainAspectRatio: false,
         scales: {
             y: {
                 beginAtZero: true
             }
-        }
+        },
     },
 });
 </script>

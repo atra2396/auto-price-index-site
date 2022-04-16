@@ -1,10 +1,11 @@
 {% extends "layout.html" %}
 {% block content %}
-<div class="row mh-75" id="test-div">
+<div class="row" id="test-div">
     <script>
         let ctx;
         let myChart;
-
+        let mediaQuery;
+        let chartAxis;
     </script>
     {% if start_year and end_year and make and model and buckets and values %}
     {{ render_partial('prices.html', start_year=start_year, end_year=end_year, make=make, model=model, buckets=buckets,
