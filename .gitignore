@@ -1,2 +1,6 @@
 **/__pycache__
 local.settings.json
+node_modules
+
+# Should get built by tailwind
+static/main.css
