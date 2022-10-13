@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% block content %}
-<div class="row" id="test-div">
+<div class="row" id="chart-div">
     <script>
         let ctx;
         let myChart;
@@ -18,36 +18,36 @@
 </div>
 <form class="row mt-3">
     <div class="col">
-        <select name="start_year" class="form-select year-selector" id="start-year-select"
+        <select name="start_year" class="year-selector form-select select-primary" id="start-year-select"
             onchange="update_selector('end-year-select', get_end_years(), 'End Year')" aria-label="Year selector">
             <option selected>Select Start Year</option>
         </select>
     </div>
-    <div class="w-100 d-lg-none"></div>
+    <div class="w-full d-lg-none"></div>
     <div class="col">
-        <select name="end_year" class="form-select" id="end-year-select"
+        <select name="end_year" class="form-select select-primary" id="end-year-select"
             onchange="update_selector('make-select', get_makes_for_year(), 'Make')" disabled>
             <option selected>Select End Year</option>
  
         </select>
     </div>
-    <div class="w-100 d-lg-none"></div>
+    <div class="w-full d-lg-none"></div>
     <div class="col">
-        <select name="make" class="form-select" id="make-select"
+        <select name="make" class="form-select select-primary" id="make-select"
             onchange="update_selector('model-select', get_models_for_year_make(), 'Model')" aria-label="Make selector" disabled>
             <option selected>Select Make</option>
         </select>
     </div>
-    <div class="w-100 d-lg-none"></div>
+    <div class="w-full d-lg-none"></div>
     <div class="col">
-        <select name="model" class="form-select" id="model-select" aria-label="Model selector" disabled>
+        <select name="model" class="form-select select-primary" id="model-select" aria-label="Model selector" disabled>
             <option selected>Select Model</option>
         </select>
     </div>
-    <div class="w-100 d-lg-none"></div>
+    <div class="w-full d-lg-none"></div>
     <div class="col-1">
-        <button type="submit" class="bg-blue-400 p-2 rounded text-gray-50" hx-get="/" hx-push-url="true" hx-include=".form-select"
-            hx-target="#test-div">Search</button>
+        <button type="submit" class="bg-blue-400 hover:bg-blue-200 transition p-2 rounded text-gray-50" hx-get="/" hx-push-url="true" hx-include=".form-select"
+            hx-target="#chart-div">Search</button>
     </div>
 </form>
 <div class="row justify-content-center" style="margin-top: 10vh;">
