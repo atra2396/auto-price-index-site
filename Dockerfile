@@ -1,6 +1,7 @@
 FROM node:slim AS assets
 WORKDIR /app
 COPY package.json package-lock.json tailwind.config.js ./
+COPY templates templates/
 COPY static/styles.css .
 RUN npm ci && npx tailwindcss -i ./styles.css -o main.css
 
